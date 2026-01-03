@@ -1,1 +1,0 @@
-# starpoint-class6
