@@ -679,15 +679,6 @@ for (const r of materialsRows) {
     break;
   }
 }
-
-wallOfShameLink = "";
-for (const r of materialsRows) {
-  if (r.c?.[18]?.v) {   // Column S
-    wallOfShameLink = r.c[18].v;
-    break;
-  }
-}
-
        renderTable();
 renderNotices();
 renderMaterials();
