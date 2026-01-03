@@ -501,6 +501,36 @@ body.naughty .mat-list li a:active{
     /* ====== MATERIALS RENDER ====== */
     function renderMaterials(){
       materialsBody.innerHTML = "";
+      // ===== Wall of Shame (appears above Study Materials) =====
+if (wallOfShameLink) {
+  const wrap = document.createElement("div");
+  wrap.style.marginBottom = "14px";
+
+  const title = document.createElement("div");
+  title.textContent = "Wall of Shame";
+  title.style.fontWeight = "600";
+  title.style.marginBottom = "6px";
+
+  if (/\.(mp4|webm|ogg)$/i.test(wallOfShameLink)) {
+    const video = document.createElement("video");
+    video.src = wallOfShameLink;
+    video.controls = true;
+    video.style.width = "100%";
+    video.style.borderRadius = "8px";
+    wrap.appendChild(title);
+    wrap.appendChild(video);
+  } else {
+    const img = document.createElement("img");
+    img.src = wallOfShameLink;
+    img.style.width = "100%";
+    img.style.borderRadius = "8px";
+    wrap.appendChild(title);
+    wrap.appendChild(img);
+  }
+
+  materialsBody.appendChild(wrap);
+}
+
       if (!materialsRows.length){
         materialsBody.innerHTML = `<div style="opacity:.7;">No materials</div>`;
         return;
