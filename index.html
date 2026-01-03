@@ -673,7 +673,7 @@ body.naughty .mat-list li a:active{
         // Extract Wall of Shame link from column S
 wallOfShameLink = "";
 for (const r of materialsRows) {
-  if (r.c?.[3]?.v) {   // Column S (4th selected column)
+ if (r.c?.[3]?.v) {   // Column S (because SELECT A,B,C,S)
   wallOfShameLink = r.c[3].v;
   break;
 }
