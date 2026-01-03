@@ -673,11 +673,11 @@ body.naughty .mat-list li a:active{
         // Extract Wall of Shame link from column S
 wallOfShameLink = "";
 for (const r of materialsRows) {
-  if (r.c?.[18]?.v) {   // Column S
-    wallOfShameLink = r.c[18].v;
-    break;
-  }
+  if (r.c?.[3]?.v) {   // Column S (4th selected column)
+  wallOfShameLink = r.c[3].v;
+  break;
 }
+
        renderTable();
 renderNotices();
 renderMaterials();
