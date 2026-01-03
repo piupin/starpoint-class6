@@ -284,6 +284,14 @@ body.naughty .mat-list li a:active{
       <button id="closeMenuBtn" class="more-btn" aria-label="Close menu">✕</button>
     </div>
     <div class="drawer-content">
+    <!-- Wall of Shame -->
+<div class="group" id="wallGroup" style="display:none;">
+  <button class="group-header" data-target="#wallBody">
+    Wall of Shame <span>▾</span>
+  </button>
+  <div id="wallBody" class="group-body"></div>
+</div>
+
       <!-- Study Materials -->
       <div class="group">
         <button class="group-header" data-target="#materialsBody">
@@ -328,7 +336,7 @@ body.naughty .mat-list li a:active{
     const passURL       = `https://docs.google.com/spreadsheets/d/${mainSheetID}/gviz/tq?sheet=${mainSheetName}&range=W1:W1`;
     const seatQuery     = encodeURIComponent("SELECT I");
     const seatsURL      = `https://docs.google.com/spreadsheets/d/${mainSheetID}/gviz/tq?sheet=${mainSheetName}&tq=${seatQuery}`;
-    const matQuery      = encodeURIComponent("SELECT A,B,C");
+   const matQuery      = encodeURIComponent("SELECT A,B,C,S");
     const materialsURL  = `https://docs.google.com/spreadsheets/d/${pdfSheetID}/gviz/tq?sheet=${pdfSheetName}&tq=${matQuery}`;
 
     /* ====== DOM ====== */
@@ -363,6 +371,7 @@ body.naughty .mat-list li a:active{
     let shuffledPlan = null;      // Temporary, session-only
     let teacherMode = false;
     let materialsRows = [];
+    let wallOfShameLink = "";
 
     /* ====== UTILS ====== */
     function parseGViz(text){
@@ -528,6 +537,28 @@ body.naughty .mat-list li a:active{
         materialsBody.appendChild(ul);
       });
     }
+    function renderWallOfShame(){
+  const group = document.getElementById("wallGroup");
+  const body  = document.getElementById("wallBody");
+
+  if (!wallOfShameLink){
+    group.style.display = "none";
+    return;
+  }
+
+  group.style.display = "block";
+
+  if (wallOfShameLink.match(/\.(mp4|webm|ogg)/i)){
+    body.innerHTML = `
+      <video src="${wallOfShameLink}" controls
+        style="width:100%;border-radius:12px;"></video>`;
+  } else {
+    body.innerHTML = `
+      <img src="${wallOfShameLink}"
+        style="width:100%;border-radius:12px;" />`;
+  }
+}
+
 
     /* ====== SIT PLAN ====== */
     function renderSitPlan() {
@@ -640,21 +671,41 @@ body.naughty .mat-list li a:active{
           const c = loadCache("cache_materials_v1");
           if (c) materialsRows = c;
         }
+        // Extract Wall of Shame link from column S
+wallOfShameLink = "";
+for (const r of materialsRows) {
+  if (r.c?.[18]?.v) {   // Column S
+    wallOfShameLink = r.c[18].v;
+    break;
+  }
+}
 
-        renderTable();
-        renderNotices();
-        renderMaterials();
-        renderSitPlan();
+wallOfShameLink = "";
+for (const r of materialsRows) {
+  if (r.c?.[18]?.v) {   // Column S
+    wallOfShameLink = r.c[18].v;
+    break;
+  }
+}
+
+       renderTable();
+renderNotices();
+renderMaterials();
+renderWallOfShame();
+renderSitPlan();
+
       }).catch(()=>{
         const c1 = loadCache("cache_students_v3"); if (c1) dataRows = c1;
         const c2 = loadCache("cache_pass_v1");     if (c2) teacherPassword = c2;
         const c3 = loadCache("cache_seats_v1");    if (c3) seatNames = c3;
         const c4 = loadCache("cache_materials_v1");if (c4) materialsRows = c4;
         shuffledPlan = null;
-        renderTable();
-        renderNotices();
-        renderMaterials();
-        renderSitPlan();
+renderTable();
+renderNotices();
+renderMaterials();
+renderWallOfShame();
+renderSitPlan();
+
       });
     }
 
